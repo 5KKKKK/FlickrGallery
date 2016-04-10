@@ -26,6 +26,7 @@ public class FlickrFetchr {
     public static final String PREF_LAST_RESULT_ID="lastResultId";
     public static int page=1;
     public static int per_page=25;
+    public static String fromWhere="1";
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
@@ -105,7 +106,16 @@ public class FlickrFetchr {
         while (eventType!=XmlPullParser.END_DOCUMENT){
             if (eventType==XmlPullParser.START_TAG&&"photos".equals(parser.getName())){
                 String pages=parser.getAttributeValue(null,"pages");
-                PhotoInterestingFragment.totalPages=Integer.parseInt(pages);
+
+                if (fromWhere.equals("interesting")){
+                    PhotoInterestingFragment.totalPages=Integer.parseInt(pages);
+                }
+                if (fromWhere.equals("contacts")){
+                    PhotoContactsFragment.totalPages=Integer.parseInt(pages);
+                }
+                if (fromWhere.equals("latest")){
+                    PhotoLatestFragment.totalPages=Integer.parseInt(pages);
+                }
             }
 
             if (eventType==XmlPullParser.START_TAG&&XML_PHOTO.equals(parser.getName())){

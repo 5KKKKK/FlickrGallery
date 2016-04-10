@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -34,11 +36,17 @@ import java.util.Arrays;
  * Created by yanhoor on 2016/4/5.
  */
 public class PhotoContactsFragment extends Fragment {
+    private static final String TAG="PhotoContactsFragment";
+
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
     private static final String PARAM_EXTRAS="extras";
     private static final String EXTRA_SMALL_URL="url_s";
 
+    public static int totalPages;//在FlickrFetcher获取照片时设置的总页数
+    private int page=1;
+    private String per_page="25";
+    private GridViewAdapter mAdapter;
     private GridView mGridView;
     private ArrayList<GalleryItem> mGalleryItems;
 
@@ -87,6 +95,24 @@ public class PhotoContactsFragment extends Fragment {
             }
         });
 
+        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (view.getLastVisiblePosition()==view.getCount()-1){
+                    if (scrollState==SCROLL_STATE_TOUCH_SCROLL&&FlickrFetchr.page<totalPages){
+                        page++;
+                        getContactsPhotos();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
         return v;
     }
 
@@ -94,7 +120,8 @@ public class PhotoContactsFragment extends Fragment {
         if (getActivity()==null || mGridView==null) return;
 
         if (mGalleryItems!=null){
-            mGridView.setAdapter(new GridViewAdapter(mGalleryItems));
+            mAdapter=new GridViewAdapter(mGalleryItems);
+            mGridView.setAdapter(mAdapter);
         }else {
             mGridView.setAdapter(null);
         }
@@ -103,6 +130,7 @@ public class PhotoContactsFragment extends Fragment {
     private void getContactsPhotos(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.photos.getContactsPhotos",
                 "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                "page"+page,"per_page"+per_page,
                 LogInFragment.PUBLIC_CODE,PARAM_EXTRAS+EXTRA_SMALL_URL};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
@@ -115,6 +143,8 @@ public class PhotoContactsFragment extends Fragment {
                 .appendQueryParameter("method", "flickr.photos.getContactsPhotos")
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter(PARAM_EXTRAS,EXTRA_SMALL_URL)
+                .appendQueryParameter("per_page",per_page)
+                .appendQueryParameter("page",String.valueOf(page))
                 .appendQueryParameter("auth_token", MainLayoutActivity.fullToken)
                 .appendQueryParameter("api_sig",apiSig)
                 .build().toString();
@@ -125,20 +155,33 @@ public class PhotoContactsFragment extends Fragment {
             @Override
             public void onFinish() {
                 super.onFinish();
-                setupAdapter();
             }
 
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
+                Log.d(TAG, "onSuccess: Getting contacts photos from "+t);
 
                 try {
                     XmlPullParserFactory factory=XmlPullParserFactory.newInstance();
                     XmlPullParser parser=factory.newPullParser();
                     parser.setInput(new StringReader(t));
 
-                    mGalleryItems.clear();
-                    new FlickrFetchr().parseItems(mGalleryItems,parser);
+                    ArrayList<GalleryItem>newGalleryItems=new ArrayList<>();
+                    FlickrFetchr.fromWhere="contacts";
+                    new FlickrFetchr().parseItems(newGalleryItems,parser);
+
+                    if (mGalleryItems.size()==0){
+                        mGalleryItems.addAll(newGalleryItems);
+                        mAdapter.notifyDataSetChanged();
+                    }else {
+                        String lastOldItem=mGalleryItems.get(mGalleryItems.size()-1).getId();
+                        String lastNewItem=newGalleryItems.get(newGalleryItems.size()-1).getId();
+                        if (!lastOldItem.equals(lastNewItem)){
+                            mGalleryItems.addAll(newGalleryItems);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
                 }catch (XmlPullParserException xppe) {
                     xppe.printStackTrace();
                 } catch (IOException ioe) {

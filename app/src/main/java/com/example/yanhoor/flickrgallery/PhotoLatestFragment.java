@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -41,6 +42,10 @@ public class PhotoLatestFragment extends Fragment{
     private static final String PARAM_EXTRAS="extras";
     private static final String EXTRA_SMALL_URL="url_s";
 
+    public static int totalPages;//在FlickrFetcher获取照片时设置的总页数
+    private int page=1;
+    private String per_page="25";
+    private GridViewAdapter mAdapter;
     private GridView mGridView;
     private ArrayList<GalleryItem>mGalleryItems;
 
@@ -88,6 +93,24 @@ public class PhotoLatestFragment extends Fragment{
             }
         });
 
+        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (view.getLastVisiblePosition()==view.getCount()-1){
+                    if (scrollState==SCROLL_STATE_TOUCH_SCROLL&&FlickrFetchr.page<totalPages){
+                        page++;
+                        getRecentPhoto();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
         return v;
     }
 
@@ -95,7 +118,8 @@ public class PhotoLatestFragment extends Fragment{
         if (getActivity()==null || mGridView==null) return;
 
         if (mGalleryItems!=null){
-            mGridView.setAdapter(new GridViewAdapter(mGalleryItems));
+            mAdapter=new GridViewAdapter(mGalleryItems);
+            mGridView.setAdapter(mAdapter);
         }else {
             mGridView.setAdapter(null);
         }
@@ -105,6 +129,8 @@ public class PhotoLatestFragment extends Fragment{
         String url= Uri.parse(ENDPOINT).buildUpon()
                 .appendQueryParameter("method",METHOD_GET_RECENT)//自动转义查询字符串
                 .appendQueryParameter("api_key",API_KEY)
+                .appendQueryParameter("page",String.valueOf(page))
+                .appendQueryParameter("per_page",per_page)
                 .appendQueryParameter(PARAM_EXTRAS,EXTRA_SMALL_URL)
                 .build().toString();
 
@@ -114,7 +140,6 @@ public class PhotoLatestFragment extends Fragment{
             @Override
             public void onFinish() {
                 super.onFinish();
-                setupAdapter();
             }
 
             @Override
@@ -126,8 +151,22 @@ public class PhotoLatestFragment extends Fragment{
                     XmlPullParser parser=factory.newPullParser();
                     parser.setInput(new StringReader(t));
 
-                    mGalleryItems.clear();
-                    new FlickrFetchr().parseItems(mGalleryItems,parser);
+                    ArrayList<GalleryItem>newGalleryItems=new ArrayList<>();
+                    FlickrFetchr.fromWhere="latest";
+                    new FlickrFetchr().parseItems(newGalleryItems,parser);
+
+                    if (mGalleryItems.size()==0){
+                        mGalleryItems.addAll(newGalleryItems);
+                        mAdapter.notifyDataSetChanged();
+                    }else {
+                        String lastOldItem=mGalleryItems.get(mGalleryItems.size()-1).getId();
+                        String lastNewItem=newGalleryItems.get(newGalleryItems.size()-1).getId();
+                        if (!lastOldItem.equals(lastNewItem)){
+                            mGalleryItems.addAll(newGalleryItems);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+
                 }catch (XmlPullParserException xppe) {
                     xppe.printStackTrace();
                 } catch (IOException ioe) {

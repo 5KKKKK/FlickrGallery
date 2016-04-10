@@ -31,21 +31,21 @@ public class PhotoInterestingFragment extends VisibleFragment {
 
     public static int totalPages;//在FlickrFetcher获取照片时设置的总页数
 
+    GalleryItemAdapter mAdapter;
     GridView mGridView;
     ProgressBar mProgressBar;
-    ArrayList<GalleryItem> mPerPageItems;
-    ArrayList<ArrayList<GalleryItem>>mAllItems=new ArrayList<>();
+    ArrayList<GalleryItem> mGalleryItems;
     ThumbnaiDownloader<ImageView> mThumbnaiThread;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        //setRetainInstance(true);
         setHasOptionsMenu(true);
-        mPerPageItems =GalleryItemLab.get(getActivity()).getGalleryItems();//获取文件中的items
-        mAllItems.add(mPerPageItems);
-        Log.d(TAG,"mPerPageItems is "+ mPerPageItems);
-        if (mPerPageItems ==null){
+        mGalleryItems =GalleryItemLab.get(getActivity()).getGalleryItems();//获取文件中的items
+        Log.d(TAG,"mGalleryItems size is "+ mGalleryItems.size());
+        Log.d(TAG, "onCreate: page "+FlickrFetchr.page);
+        if (mGalleryItems ==null){
             updateItems();
         }
         mThumbnaiThread=new ThumbnaiDownloader<>(getActivity(),new Handler());//创建的handler默认与当前线程相关联
@@ -86,20 +86,8 @@ public class PhotoInterestingFragment extends VisibleFragment {
                 mSRL.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //返回上一页
-                        if (FlickrFetchr.page>1){
-                            mSRL.setRefreshing(false);
-                            int lastPage=--FlickrFetchr.page;
-                            mPerPageItems=mAllItems.get(lastPage-1);
-                            setupAdapter();
-
-                            if (FlickrFetchr.page==1)
-                                return;//防止进入下面的if刷新两次
-                        }
-
-                        if (getActivity()!=null&&FlickrFetchr.page==1){
+                        if (getActivity()!=null){
                             updateItems();
-                            mAllItems.clear();
                             mSRL.setRefreshing(false);
                         }
                     }
@@ -110,7 +98,7 @@ public class PhotoInterestingFragment extends VisibleFragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GalleryItem item= mPerPageItems.get(position);
+                GalleryItem item= mGalleryItems.get(position);
                     Intent i=new Intent(getActivity(),PhotoDetailActivity.class);
                     i.putExtra(PhotoDetailFragment.EXTRA_GALLERYITEM_mId,item.getId());
                     startActivity(i);
@@ -122,12 +110,7 @@ public class PhotoInterestingFragment extends VisibleFragment {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (view.getLastVisiblePosition()==view.getCount()-1){
                     if (scrollState==SCROLL_STATE_TOUCH_SCROLL&&FlickrFetchr.page<totalPages){
-                        try {
-                            mProgressBar.setVisibility(View.VISIBLE);
-                            Thread.sleep(1000);//延迟加载
-                        }catch (InterruptedException e){
-                            e.printStackTrace();
-                        }
+                        mProgressBar.setVisibility(View.VISIBLE);
                         FlickrFetchr.page++;
                         updateItems();
                     }
@@ -148,8 +131,9 @@ public class PhotoInterestingFragment extends VisibleFragment {
         Log.d(TAG, "setupAdapter: current page "+FlickrFetchr.page);
         if (getActivity()==null || mGridView==null) return;
 
-        if (mPerPageItems !=null){
-            mGridView.setAdapter(new GalleryItemAdapter(mPerPageItems));
+        if (mGalleryItems !=null){
+            mAdapter=new GalleryItemAdapter(mGalleryItems);
+            mGridView.setAdapter(mAdapter);
         }else {
             mGridView.setAdapter(null);
         }
@@ -165,6 +149,7 @@ public class PhotoInterestingFragment extends VisibleFragment {
             if (activity==null)
                 return new ArrayList<>();
 
+            FlickrFetchr.fromWhere="interesting";
             return new FlickrFetchr().fetchItems();
         }
 
@@ -172,19 +157,27 @@ public class PhotoInterestingFragment extends VisibleFragment {
         @Override
         protected void onPostExecute(final ArrayList<GalleryItem> galleryItems) {
             mProgressBar.setVisibility(View.GONE);
-            mPerPageItems =galleryItems;
+
+            //判断返回的内容是否与旧的相同，防止重复添加
+            int lastOldItem=mGalleryItems.size()-1;
+            int lastNewItem=galleryItems.size()-1;
+            if (!galleryItems.get(lastNewItem).getId().equals(mGalleryItems.get(lastOldItem).getId())){
+                mGalleryItems.addAll(galleryItems);
+                mAdapter.notifyDataSetChanged();
+            }
 
             if (FlickrFetchr.page==1){
-                if (mPerPageItems.size()!=0){
+                if (galleryItems.size()!=0){
                     //添加新的图片前先删除原有的
                     GalleryItemLab.get(getActivity()).deleteGalleryItems();
                 }
-                GalleryItemLab.get(getActivity()).addGalleryItems(mPerPageItems);//应设置保存第一页
+                Log.d(TAG, "onPostExecute: saved galleryItems");
+                GalleryItemLab.get(getActivity()).addGalleryItems(galleryItems);//应设置保存第一页
+                Log.d(TAG,"saved items size is "+GalleryItemLab.get(getActivity()).getGalleryItems().size());
             }
 
-            mAllItems.add(mPerPageItems);
-            Log.d(TAG,"mPerPageItems size is "+ mPerPageItems.size());
-            setupAdapter();
+            Log.d(TAG,"mGalleryItems size is "+ mGalleryItems.size());
+            //setupAdapter();
         }
     }
 
