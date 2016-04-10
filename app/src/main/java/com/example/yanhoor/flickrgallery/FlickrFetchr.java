@@ -25,6 +25,7 @@ public class FlickrFetchr {
 
     public static final String PREF_LAST_RESULT_ID="lastResultId";
     public static int page=1;
+    public static int per_page=25;
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
@@ -91,6 +92,7 @@ public class FlickrFetchr {
                 .appendQueryParameter("method", METHOD_INTERESTINGNESS)//自动转义查询字符串
                 .appendQueryParameter("api_key",API_KEY)
                 .appendQueryParameter("page",String.valueOf(page))
+                .appendQueryParameter("per_page",String.valueOf(per_page))
                 .appendQueryParameter(PARAM_EXTRAS,EXTRA_SMALL_URL)
                 .build().toString();
         return downloadGalleryItems(url);

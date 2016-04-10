@@ -5,12 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.paging.gridview.PagingGridView
+    <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnWidth="160dp"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"/>
+        android:stretchMode="columnWidth"
+        />
+
+    <ProgressBar
+        android:id="@+id/load_more_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:visibility="gone"
+        />
 
 </android.support.v4.widget.SwipeRefreshLayout>

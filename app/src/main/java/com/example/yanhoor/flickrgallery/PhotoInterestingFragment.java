@@ -1,11 +1,8 @@
 package com.example.yanhoor.flickrgallery;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,14 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.GalleryItemLab;
-import com.paging.gridview.PagingGridView;
 
 import java.util.ArrayList;
 /**
@@ -31,9 +29,10 @@ import java.util.ArrayList;
 public class PhotoInterestingFragment extends VisibleFragment {
     private static final String TAG="PhotoInteresting";
 
-    public static int totalPages;//获取照片时设置的总页数
+    public static int totalPages;//在FlickrFetcher获取照片时设置的总页数
 
-    PagingGridView mGridView;
+    GridView mGridView;
+    ProgressBar mProgressBar;
     ArrayList<GalleryItem> mPerPageItems;
     ArrayList<ArrayList<GalleryItem>>mAllItems=new ArrayList<>();
     ThumbnaiDownloader<ImageView> mThumbnaiThread;
@@ -44,6 +43,7 @@ public class PhotoInterestingFragment extends VisibleFragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mPerPageItems =GalleryItemLab.get(getActivity()).getGalleryItems();//获取文件中的items
+        mAllItems.add(mPerPageItems);
         Log.d(TAG,"mPerPageItems is "+ mPerPageItems);
         if (mPerPageItems ==null){
             updateItems();
@@ -70,7 +70,8 @@ public class PhotoInterestingFragment extends VisibleFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.fragment_photo_gallery,container,false);
-        mGridView=(PagingGridView)v.findViewById(R.id.gridView);
+        mGridView=(GridView)v.findViewById(R.id.gridView);
+        mProgressBar=(ProgressBar)v.findViewById(R.id.load_more_progress);
         setupAdapter();
 
         //下拉刷新颜色
@@ -85,22 +86,20 @@ public class PhotoInterestingFragment extends VisibleFragment {
                 mSRL.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        //返回上一页
                         if (FlickrFetchr.page>1){
                             mSRL.setRefreshing(false);
-                            FlickrFetchr.page--;
-                            mPerPageItems=mAllItems.get(FlickrFetchr.page);
+                            int lastPage=--FlickrFetchr.page;
+                            mPerPageItems=mAllItems.get(lastPage-1);
                             setupAdapter();
+
+                            if (FlickrFetchr.page==1)
+                                return;//防止进入下面的if刷新两次
                         }
 
                         if (getActivity()!=null&&FlickrFetchr.page==1){
-                            ConnectivityManager connectivityManager=(ConnectivityManager)getActivity()
-                                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-                            NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
-                            if (networkInfo!=null&&networkInfo.isAvailable()){
-                                updateItems();
-                            }else{
-                                Toast.makeText(getActivity(),R.string.networt_unavailable,Toast.LENGTH_SHORT).show();
-                            }
+                            updateItems();
+                            mAllItems.clear();
                             mSRL.setRefreshing(false);
                         }
                     }
@@ -118,10 +117,35 @@ public class PhotoInterestingFragment extends VisibleFragment {
             }
         });
 
+        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (view.getLastVisiblePosition()==view.getCount()-1){
+                    if (scrollState==SCROLL_STATE_TOUCH_SCROLL&&FlickrFetchr.page<totalPages){
+                        try {
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            Thread.sleep(1000);//延迟加载
+                        }catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
+                        FlickrFetchr.page++;
+                        updateItems();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
         return v;
     }
 
     void setupAdapter(){
+        Log.d(TAG, "setupAdapter: current page "+FlickrFetchr.page);
         if (getActivity()==null || mGridView==null) return;
 
         if (mPerPageItems !=null){
@@ -147,6 +171,7 @@ public class PhotoInterestingFragment extends VisibleFragment {
         //在主线程运行，在doinbackground之后执行
         @Override
         protected void onPostExecute(final ArrayList<GalleryItem> galleryItems) {
+            mProgressBar.setVisibility(View.GONE);
             mPerPageItems =galleryItems;
 
             if (FlickrFetchr.page==1){
@@ -155,20 +180,6 @@ public class PhotoInterestingFragment extends VisibleFragment {
                     GalleryItemLab.get(getActivity()).deleteGalleryItems();
                 }
                 GalleryItemLab.get(getActivity()).addGalleryItems(mPerPageItems);//应设置保存第一页
-            }
-
-            if (totalPages>FlickrFetchr.page){
-                mGridView.setHasMoreItems(true);
-                mGridView.setPagingableListener(new PagingGridView.Pagingable() {
-                    @Override
-                    public void onLoadMoreItems() {
-                        FlickrFetchr.page++;
-                        updateItems();
-                    }
-                });
-                mGridView.onFinishLoading(true,galleryItems);
-            }else {
-                mGridView.onFinishLoading(false,null);
             }
 
             mAllItems.add(mPerPageItems);
