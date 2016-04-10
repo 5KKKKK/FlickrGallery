@@ -612,6 +612,6 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
-        StaticMethodUtil.cleanImageView(mImageView);
+        //StaticMethodUtil.cleanImageView(mImageView);
     }
 }

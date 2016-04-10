@@ -24,10 +24,11 @@ public class FlickrFetchr {
     public static final String TAG="FlickrFetchr";
 
     public static final String PREF_LAST_RESULT_ID="lastResultId";
+    public static int page=1;
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
-    private static final String METHOD_GET_RECENT="flickr.interestingness.getList";
+    private static final String METHOD_INTERESTINGNESS ="flickr.interestingness.getList";
     private static final String PARAM_EXTRAS="extras";
     private static final String EXTRA_SMALL_URL="url_s";
 
@@ -85,9 +86,11 @@ public class FlickrFetchr {
     }
 
     public ArrayList<GalleryItem> fetchItems(){
+        Log.d(TAG,"Loding page "+page);
         String url= Uri.parse(ENDPOINT).buildUpon()
-                .appendQueryParameter("method",METHOD_GET_RECENT)//自动转义查询字符串
+                .appendQueryParameter("method", METHOD_INTERESTINGNESS)//自动转义查询字符串
                 .appendQueryParameter("api_key",API_KEY)
+                .appendQueryParameter("page",String.valueOf(page))
                 .appendQueryParameter(PARAM_EXTRAS,EXTRA_SMALL_URL)
                 .build().toString();
         return downloadGalleryItems(url);
@@ -98,6 +101,11 @@ public class FlickrFetchr {
         int eventType=parser.next();
 
         while (eventType!=XmlPullParser.END_DOCUMENT){
+            if (eventType==XmlPullParser.START_TAG&&"photos".equals(parser.getName())){
+                String pages=parser.getAttributeValue(null,"pages");
+                PhotoInterestingFragment.totalPages=Integer.parseInt(pages);
+            }
+
             if (eventType==XmlPullParser.START_TAG&&XML_PHOTO.equals(parser.getName())){
                 String id=parser.getAttributeValue(null,"id");
                 String caption=parser.getAttributeValue(null,"title");
