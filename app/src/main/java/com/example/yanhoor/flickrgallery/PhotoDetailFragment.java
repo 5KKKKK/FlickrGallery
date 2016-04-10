@@ -54,17 +54,12 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
     private static final String TAG="PhotoDetailFragment";
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
-    private static final String METHOD="flickr.stats.getPhotoStats";
 
     private String mFullToken;
 
     public static final String EXTRA_GALLERYITEM_mId ="com.example.yanhoor.photogallery.galleryItem_id";
 
     private GalleryItem mGalleryItem;
-
-    private String mComment="0";
-    private String mViews="0";
-    private String mFavorites="0";
 
     RelativeLayout ownerLayout;
     ImageView ownerIcon;
