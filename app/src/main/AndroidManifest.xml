@@ -60,6 +60,8 @@
 
         <activity android:name=".PhotosetDetailActivity"/>
 
+        <activity android:name=".FavoritePhotosActivity"/>
+
         <service android:name="com.example.yanhoor.flickrgallery.PollService"/>
 
         <receiver android:name="com.example.yanhoor.flickrgallery.StartupReceiver">

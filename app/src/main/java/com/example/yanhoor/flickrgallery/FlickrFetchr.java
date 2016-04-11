@@ -100,7 +100,7 @@ public class FlickrFetchr {
     }
 
     //解析xml文件
-    void parseItems(ArrayList<GalleryItem> items, XmlPullParser parser) throws XmlPullParserException,IOException{
+    public void parseItems(ArrayList<GalleryItem> items, XmlPullParser parser) throws XmlPullParserException,IOException{
         int eventType=parser.next();
 
         while (eventType!=XmlPullParser.END_DOCUMENT){

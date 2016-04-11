@@ -103,9 +103,32 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/favorites_layout_administratorProfile"
+                style="@style/common_style_layout"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/photoset_layout_administratorProfile"
+                android:layout_marginStart="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/favorites_text_administratorProfile"
+                    android:text="@string/favorites_photo"
+                    style="@style/common_style_text"
+                    android:textStyle="bold|italic"/>
+
+                <TextView
+                    android:id="@+id/favorites_num_administratorProfile"
+                    style="@style/common_style_layout"
+                    android:layout_toEndOf="@+id/favorites_text_administratorProfile"
+                    android:layout_marginStart="10dp"
+                    android:text="0"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/location_layout_administratorProfile"
                 style="@style/common_style_layout"
-                android:layout_below="@+id/photoset_layout_administratorProfile"
+                android:layout_below="@+id/favorites_layout_administratorProfile"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:visibility="gone">

@@ -21,11 +21,13 @@ public class User implements Serializable{
     private String mDescription;
     private String mContact;
     private String mPhotosetNum;
+    private String mFavoritesNum;
 
     private ArrayList<User>mFollowingUsers=new ArrayList<>();
     private ArrayList<GalleryItem>mGalleryItems=new ArrayList<>();
     private ArrayList<Group>mGroups=new ArrayList<>();//从flickr.people.getGroups获得
     private ArrayList<PhotoSet>mPhotoSets=new ArrayList<>();
+    private ArrayList<GalleryItem>mFavoritePhotos=new ArrayList<>();
 
     public ArrayList<GalleryItem> getGalleryItems() {
         return mGalleryItems;
@@ -137,6 +139,22 @@ public class User implements Serializable{
 
     public void setPhotosetNum(String photosetNum) {
         mPhotosetNum = photosetNum;
+    }
+
+    public String getFavoritesNum() {
+        return mFavoritesNum;
+    }
+
+    public void setFavoritesNum(String favoritesNum) {
+        mFavoritesNum = favoritesNum;
+    }
+
+    public ArrayList<GalleryItem> getFavoritePhotos() {
+        return mFavoritePhotos;
+    }
+
+    public void setFavoritePhotos(ArrayList<GalleryItem> favoritePhotos) {
+        mFavoritePhotos.addAll(favoritePhotos);
     }
 
     public String getUserPageUrl(){

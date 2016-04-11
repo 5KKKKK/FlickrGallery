@@ -68,6 +68,8 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
     RelativeLayout groupLayout;
     RelativeLayout photosetLayout;
     TextView photosetNumber;
+    RelativeLayout favoritesLayout;
+    TextView favoritesNum;
     RelativeLayout locationLayout;
     TextView locationTextView;
     ImageView buddyIconImageView;
@@ -124,6 +126,10 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
         photosetLayout=(RelativeLayout)v.findViewById(R.id.photoset_layout_administratorProfile);
         photosetNumber=(TextView)v.findViewById(R.id.photoset_num_administratorProfile);
         photosetLayout.setOnClickListener(this);
+
+        favoritesLayout=(RelativeLayout)v.findViewById(R.id.favorites_layout_administratorProfile);
+        favoritesNum=(TextView)v.findViewById(R.id.favorites_num_administratorProfile);
+        favoritesLayout.setOnClickListener(this);
 
         locationLayout=(RelativeLayout)v.findViewById(R.id.location_layout_administratorProfile);
         locationTextView=(TextView)v.findViewById(R.id.location_administratorProfile);
@@ -246,6 +252,14 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
                 }
                 break;
 
+            case R.id.favorites_layout_administratorProfile:
+                if (mUser.getFavoritePhotos().size()>0){
+                    Intent favoritesIntent=new Intent(getActivity(),FavoritePhotosActivity.class);
+                    favoritesIntent.putExtra(FavoritePhotosFragment.EXTRA_FAVORITE_PHOTOS,mUser.getFavoritePhotos());
+                    startActivity(favoritesIntent);
+                }
+                break;
+
             default:
                 break;
         }
@@ -273,6 +287,11 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
 
         if (mUser.getPhotosetNum()!=null){
             photosetNumber.setText(mUser.getPhotosetNum());
+        }
+
+        if (mUser.getFavoritesNum()!=null){
+            favoritesLayout.setVisibility(View.VISIBLE);
+            favoritesNum.setText(mUser.getFavoritesNum());
         }
 
         //Log.d(TAG,"location length is "+mUser.getLocation().length());

@@ -60,7 +60,7 @@ public class PhotoLatestFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.fragment_photo_gallery,container,false);
-        mGridView=(GridView)v.findViewById(R.id.gridView);
+        mGridView=(GridView)v.findViewById(R.id.gridView_photo_fragment);
 
         setupAdapter();
 

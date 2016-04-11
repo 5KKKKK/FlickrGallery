@@ -36,6 +36,7 @@ public class GetUserProfileUtil {
 
     private User mUser;
     private ArrayList<GalleryItem>mGalleryItems;
+    private ArrayList<GalleryItem>mFavoritePhotos;
     private ArrayList<Group>mGroups;
     private ArrayList<PhotoSet>mPhotoSets;
 
@@ -57,6 +58,7 @@ public class GetUserProfileUtil {
         getFollowings();
         getUserPhoto();
         getPhotoSetList();
+        getFavoritePhotos();
         Log.d(TAG,"user name is "+mUser.getUserName());
         return mUser;
     }
@@ -427,6 +429,79 @@ public class GetUserProfileUtil {
                 Log.d(TAG, "onSuccess: mPhotosets size is "+mUser.getPhotoSets().size());
                 mUser.setPhotoSets(mPhotoSets);
                 Log.d(TAG, "onSuccess: mPhotosets size is "+mUser.getPhotoSets().size());
+            }
+        });
+    }
+
+    public void getFavoritePhotos(){
+        mFavoritePhotos=new ArrayList<>();
+
+        String[] mSignFullTokenStringArray = {"method" + "flickr.favorites.getList",
+                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                LogInFragment.PUBLIC_CODE, "user_id" + mUser.getId(),"format"+"rest",
+                "extras"+"url_s"};
+        Arrays.sort(mSignFullTokenStringArray);
+        StringBuilder mSB = new StringBuilder();
+        for (String s : mSignFullTokenStringArray) {
+            mSB.append(s);
+        }
+        String apiSig = StaticMethodUtil.countMD5OfString(mSB.toString());
+
+        String url= Uri.parse(ENDPOINT).buildUpon()
+                .appendQueryParameter("method","flickr.favorites.getList")
+                .appendQueryParameter("api_key",API_KEY)
+                .appendQueryParameter("user_id",mUser.getId())
+                .appendQueryParameter("auth_token", MainLayoutActivity.fullToken)
+                .appendQueryParameter("format","rest")
+                .appendQueryParameter( "extras","url_s")
+                .appendQueryParameter("api_sig", apiSig)
+                .build().toString();
+
+        HttpConfig config=new HttpConfig();
+        config.cacheTime=0;
+        new KJHttp(config).get(url, new HttpCallBack() {
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mPersonalProfileListener.onUpdateFinish(mUser);
+            }
+
+            @Override
+            public void onSuccess(String t) {
+                mFavoritePhotos.clear();
+                super.onSuccess(t);
+                Log.d(TAG, "onSuccess: favorite photo "+t);
+
+                try {
+                    XmlPullParserFactory factory=XmlPullParserFactory.newInstance();
+                    XmlPullParser parser=factory.newPullParser();
+                    parser.setInput(new StringReader(t));
+
+                    int eventType=parser.getEventType();
+                    while(eventType!=XmlPullParser.END_DOCUMENT){
+                        if (eventType==XmlPullParser.START_TAG&&"photos".equals(parser.getName())){
+                            String total=parser.getAttributeValue(null,"total");
+                            mUser.setFavoritesNum(total);
+                        }
+
+                        if (eventType==XmlPullParser.START_TAG&&"photo".equals(parser.getName())){
+                            GalleryItem photo=new GalleryItem();
+                            String id=parser.getAttributeValue(null,"id");
+                            String url=parser.getAttributeValue(null,"url_s");
+                            photo.setId(id);
+                            photo.setUrl(url);
+                            mFavoritePhotos.add(photo);
+                        }
+
+                        eventType=parser.next();
+                    }
+                    mUser.getFavoritePhotos().clear();
+                    mUser.setFavoritePhotos(mFavoritePhotos);
+                }catch (XmlPullParserException xppe) {
+                    xppe.printStackTrace();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
             }
         });
     }

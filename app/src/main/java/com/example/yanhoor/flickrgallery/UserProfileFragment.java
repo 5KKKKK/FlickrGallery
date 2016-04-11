@@ -47,6 +47,8 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     RelativeLayout groupLayout;
     RelativeLayout photosetLayout;
     TextView photosetNumber;
+    RelativeLayout favoritesLayout;
+    TextView favoritesNum;
     TextView locationTextView;
     RelativeLayout locationLayout;
     TextView location;
@@ -112,6 +114,10 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
         photosetLayout=(RelativeLayout)v.findViewById(R.id.photoset_layout_profile);
         photosetNumber=(TextView)v.findViewById(R.id.photoset_num_profile);
         photosetLayout.setOnClickListener(this);
+
+        favoritesLayout=(RelativeLayout)v.findViewById(R.id.favorites_layout_profile);
+        favoritesNum=(TextView)v.findViewById(R.id.favorites_num_profile);
+        favoritesLayout.setOnClickListener(this);
 
         locationLayout=(RelativeLayout)v.findViewById(R.id.location_layout);
         locationTextView=(TextView)v.findViewById(R.id.location_profile);
@@ -183,6 +189,14 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
                 }
                 break;
 
+            case R.id.favorites_layout_profile:
+                if (mUser.getFavoritePhotos().size()>0){
+                    Intent favoritesIntent=new Intent(getActivity(),FavoritePhotosActivity.class);
+                    favoritesIntent.putExtra(FavoritePhotosFragment.EXTRA_FAVORITE_PHOTOS,mUser.getFavoritePhotos());
+                    startActivity(favoritesIntent);
+                }
+                break;
+
             default:
                 break;
         }
@@ -212,6 +226,11 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
 
         if (mUser.getPhotosetNum()!=null){
             photosetNumber.setText(mUser.getPhotosetNum());
+        }
+
+        if (mUser.getFavoritesNum()!=null){
+            favoritesLayout.setVisibility(View.VISIBLE);
+            favoritesNum.setText(mUser.getFavoritesNum());
         }
 
         Log.d(TAG,"location is "+mUser.getLocation());
