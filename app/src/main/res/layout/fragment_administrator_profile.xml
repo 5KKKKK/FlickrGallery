@@ -176,7 +176,7 @@
 
 <!--使用自定义ExpandableHeightGridView防止与scrollview冲突,
 设置android:focusable防止打开时不是scrollview顶部-->
-        <com.example.yanhoor.flickrgallery.ExpandableHeightGridView
+        <com.example.yanhoor.flickrgallery.controller.ExpandableHeightGridView
             android:id="@+id/photo_gridView_administratorProfile"
             android:layout_width="match_parent"
             android:layout_height="420dp"

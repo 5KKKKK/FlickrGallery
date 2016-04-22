@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.example.yanhoor.flickrgallery.LogInFragment;
-import com.example.yanhoor.flickrgallery.MainLayoutActivity;
+import com.example.yanhoor.flickrgallery.controller.LogInFragment;
+import com.example.yanhoor.flickrgallery.controller.MainLayoutActivity;
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.Group;
 import com.example.yanhoor.flickrgallery.model.PhotoSet;

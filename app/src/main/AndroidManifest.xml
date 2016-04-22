@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainLayoutActivity"
+        <activity android:name=".controller.MainLayoutActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -28,49 +28,49 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AdministratorProfileActivity"/>
+        <activity android:name=".controller.AdministratorProfileActivity"/>
 
-        <activity android:name="com.example.yanhoor.flickrgallery.SingleFragmentActivity"/>
+        <activity android:name=".controller.SingleFragmentActivity"/>
 
-        <activity android:name="com.example.yanhoor.flickrgallery.LogInActivity"/>
+        <activity android:name=".controller.LogInActivity"/>
 
-        <activity android:name=".WebViewActivity"/>
+        <activity android:name=".controller.WebViewActivity"/>
 
-        <activity android:name="com.example.yanhoor.flickrgallery.PhotoDetailActivity"
+        <activity android:name=".controller.PhotoDetailActivity"
             android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".UserProfileActivity"/>
+        <activity android:name=".controller.UserProfileActivity"/>
 
-        <activity android:name=".ListActivity"/>
+        <activity android:name=".controller.ListActivity"/>
 
-        <activity android:name=".GroupProfileActivity"/>
+        <activity android:name=".controller.GroupProfileActivity"/>
 
-        <activity android:name=".TopicDetailActivity"/>
+        <activity android:name=".controller.TopicDetailActivity"/>
 
-        <activity android:name=".TopicReplyActivity"/>
+        <activity android:name=".controller.TopicReplyActivity"/>
 
-        <activity android:name=".UploadPhotoActivity"
+        <activity android:name=".controller.UploadPhotoActivity"
             android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".SearchActivity"/>
+        <activity android:name=".controller.SearchActivity"/>
 
-        <activity android:name=".SearchProcessActivity"/>
+        <activity android:name=".controller.SearchProcessActivity"/>
         
-        <activity android:name=".PhotoViewActivity"/>
+        <activity android:name=".controller.PhotoViewActivity"/>
 
-        <activity android:name=".PhotosetDetailActivity"/>
+        <activity android:name=".controller.PhotosetDetailActivity"/>
 
-        <activity android:name=".FavoritePhotosActivity"/>
+        <activity android:name=".controller.FavoritePhotosActivity"/>
 
-        <service android:name="com.example.yanhoor.flickrgallery.PollService"/>
+        <service android:name=".controller.PollService"/>
 
-        <receiver android:name="com.example.yanhoor.flickrgallery.StartupReceiver">
+        <receiver android:name=".controller.StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.example.yanhoor.flickrgallery.NotificationReceiver"
+        <receiver android:name=".controller.NotificationReceiver"
             android:exported="false">
             <intent-filter android:priority="-999">
                 <action android:name="com.example.yanhoor.photogallery.SHOW_NOTIFICATION"/>
