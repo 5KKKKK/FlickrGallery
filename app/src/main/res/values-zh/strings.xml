@@ -8,7 +8,7 @@
     <string name="search_hint">搜索照片</string>
     <string name="start_polling">新照片通知</string>
     <string name="stop_polling">关闭通知</string>
-    <string name="networt_unavailable">网络不可用</string>
+    <string name="network_unavailable">网络不可用</string>
     <string name="confirm_button">确认</string>
     <string name="get_token_button">获取Flickr账号验证码</string>
     <string name="log_in_text">请输入验证码（包含连接符）：</string>

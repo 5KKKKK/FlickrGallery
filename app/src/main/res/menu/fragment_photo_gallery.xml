@@ -11,6 +11,7 @@
 
     <item android:id="@+id/menu_item_toggle_polling"
           android:title="@string/start_polling"
+          android:visible="false"
           app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/menu_item_login"

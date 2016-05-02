@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.yanhoor.flickrgallery.R;
@@ -68,6 +70,12 @@ public class MainLayoutActivity extends FragmentActivity {
                 .getString(LogInFragment.PREF_FULL_TOKEN,null);
         administratorId=PreferenceManager.getDefaultSharedPreferences(this)
                 .getString(LogInFragment.PREF_USER_ID,null);
+
+        if (TextUtils.isEmpty(fullToken)){
+            Toast.makeText(this,R.string.fullToken_unavailable,Toast.LENGTH_SHORT).show();
+            Intent i=new Intent(this,LogInActivity.class);
+            startActivity(i);
+        }
 
         administrator=new User();
         administrator.setId(administratorId);

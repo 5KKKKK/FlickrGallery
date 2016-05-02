@@ -57,11 +57,11 @@ public class UploadPhotoFragment extends Fragment {
     private static final String BOUNDARYSTR="---------------------------7d44e178b0434";
     private static final String BOUNDARY="--" + BOUNDARYSTR + "\r\n";
 
-    EditText editTitle;
-    EditText editDescription;
-    GridView newPhotoGridView;
-    Button cancelButton;
-    Button postButton;
+    private EditText editTitle;
+    private EditText editDescription;
+    private GridView newPhotoGridView;
+    private Button cancelButton;
+    private Button postButton;
 
     private ArrayList<HashMap<String,Object>> imageItems=new ArrayList<>();
     private SimpleAdapter mSimpleAdapter;
