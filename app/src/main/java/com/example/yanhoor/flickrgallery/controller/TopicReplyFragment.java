@@ -1,5 +1,6 @@
 package com.example.yanhoor.flickrgallery.controller;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ public class TopicReplyFragment extends Fragment {
 
     private Topic mTopic;
     private String replyContent;
+    private ProgressDialog progressDialog;
     EditText editReply;
     Button sendReply;
 
@@ -74,6 +76,10 @@ public class TopicReplyFragment extends Fragment {
             public void onClick(View v) {
                 replyContent=editReply.getText().toString().trim();
                 if (replyContent!=null&&replyContent.length()>0){
+                    progressDialog=new ProgressDialog(getActivity());
+                    progressDialog.setMessage(getResources().getString(R.string.replying_message));
+                    progressDialog.setCancelable(true);
+                    progressDialog.show();
                     postReply();
                 }else {
                     Toast.makeText(getActivity(),R.string.content_empty,Toast.LENGTH_SHORT).show();
@@ -110,6 +116,7 @@ public class TopicReplyFragment extends Fragment {
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
+                progressDialog.dismiss();
                 Log.d(TAG,"Getting reply topic msg from "+t);
                 try {
                     XmlPullParserFactory factory=XmlPullParserFactory.newInstance();

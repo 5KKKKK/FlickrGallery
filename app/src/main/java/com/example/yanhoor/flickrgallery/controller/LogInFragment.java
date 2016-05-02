@@ -67,11 +67,6 @@ public class LogInFragment extends Fragment {
                 Intent i=new Intent(getActivity(),WebViewActivity.class);
                 i.putExtra(WebViewFragment.EXTRA_URL," https://www.flickr.com/auth-72157664677091449");
                 startActivity(i);
-                /*
-                Uri pageUri= Uri.parse("https://www.flickr.com/auth-72157664677091449");
-                Intent i=new Intent(Intent.ACTION_VIEW,pageUri);
-                startActivity(i);
-                */
             }
         });
 
@@ -79,10 +74,6 @@ public class LogInFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mMiniToken=mMiniTokenEditText.getText().toString();
-                /*StringBuilder sb=new StringBuilder(mMiniToken);
-                sb.insert(3,'-');
-                sb.insert(7,'-');
-                mMiniToken=sb.toString();//转换成XXX-XXX-XXX形式*/
                 Log.d(TAG,"mini token is "+mMiniToken);
                 String[] mSignFullTokenStringArray={PUBLIC_CODE,"api_key"+API_KEY,
                         "method"+METHOD_GET_FULL_TOKEN,"mini_token"+mMiniToken};

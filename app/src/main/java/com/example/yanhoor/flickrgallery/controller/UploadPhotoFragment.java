@@ -1,6 +1,7 @@
 package com.example.yanhoor.flickrgallery.controller;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -71,6 +72,7 @@ public class UploadPhotoFragment extends Fragment {
     private ArrayList<String>photoPaths=new ArrayList<>();
     private Handler UIHandler;
     private int count;//用于计算上传照片数
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +103,10 @@ public class UploadPhotoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (bitmapByteArrays.size()!=0){
+                    progressDialog=new ProgressDialog(getActivity());
+                    progressDialog.setMessage(getResources().getString(R.string.uploading_message));
+                    progressDialog.setCancelable(true);
+                    progressDialog.show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -399,6 +405,7 @@ public class UploadPhotoFragment extends Fragment {
                                 UIHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
+                                        progressDialog.dismiss();
                                         Toast.makeText(getActivity(),R.string.Upload_photo_successfully,Toast.LENGTH_SHORT).show();
                                         getActivity().finish();
                                     }

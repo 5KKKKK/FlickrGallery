@@ -74,7 +74,7 @@ public class PhotoViewFragment extends Fragment {
         mImageView=(ImageView)v.findViewById(R.id.imageView_photo_fragment);
 
         final ProgressDialog progressDialog=new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.downloading_photo_progressdialog));;
+        progressDialog.setMessage(getResources().getString(R.string.downloading_photo_progressdialog));
         progressDialog.setCancelable(true);
         progressDialog.show();
 

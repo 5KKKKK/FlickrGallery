@@ -19,7 +19,7 @@ public class User implements Serializable{
     private String mLocation;
     private String mFollowingsNumber;
     private String mDescription;
-    private String mContact;
+    private String mIsContact;
     private String mPhotosetNum;
     private String mFavoritesNum;
 
@@ -117,12 +117,12 @@ public class User implements Serializable{
         mGroups.addAll(groups);
     }
 
-    public String getContact() {
-        return mContact;
+    public String getIsContact() {
+        return mIsContact;
     }
 
-    public void setContact(String contact) {
-        mContact = contact;
+    public void setIsContact(String isContact) {
+        mIsContact = isContact;
     }
 
     public ArrayList<PhotoSet> getPhotoSets() {

@@ -113,7 +113,7 @@ public class GetUserProfileUtil {
 
                             mUser.setIconServer(iconSever);
                             mUser.setIconFarm(iconFarm);
-                            mUser.setContact(contact);
+                            mUser.setIsContact(contact);
                         }
                         if (eventType == XmlPullParser.START_TAG && "username".equals(parser.getName())) {
                             String userName = parser.nextText();

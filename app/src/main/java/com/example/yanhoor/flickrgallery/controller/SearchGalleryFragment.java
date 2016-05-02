@@ -1,5 +1,6 @@
 package com.example.yanhoor.flickrgallery.controller;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class SearchGalleryFragment  extends Fragment{
     private static final String EXTRA_SMALL_URL="url_s";
 
     private ArrayList<GalleryItem>mGalleryItems;
+    private ProgressDialog progressDialog;
 
     private GridView mGridView;
 
@@ -61,6 +63,10 @@ public class SearchGalleryFragment  extends Fragment{
         super.onCreate(savedInstanceState);
         mGalleryItems=new ArrayList<>();
         String query=getArguments().getString(EXTRA_QUERY_GALLERY);
+        progressDialog=new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.searching_message));
+        progressDialog.setCancelable(true);
+        progressDialog.show();
         searchPhoto(query);
     }
 
@@ -138,6 +144,7 @@ public class SearchGalleryFragment  extends Fragment{
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
+                progressDialog.dismiss();
                 Log.d(TAG,"Getting search result from "+t);
 
                 try {

@@ -160,12 +160,19 @@ public class PhotoInterestingFragment extends VisibleFragment {
         protected void onPostExecute(final ArrayList<GalleryItem> galleryItems) {
             mProgressBar.setVisibility(View.GONE);
 
-            //判断返回的内容是否与旧的相同，防止重复添加
-            int lastOldItem=mGalleryItems.size()-1;
-            int lastNewItem=galleryItems.size()-1;
-            if (!galleryItems.get(lastNewItem).getId().equals(mGalleryItems.get(lastOldItem).getId())){
+            //第一次打开应用
+            if (mGalleryItems.size()==0){
                 mGalleryItems.addAll(galleryItems);
-                mAdapter.notifyDataSetChanged();
+            }
+
+            //判断返回的内容是否与旧的相同，防止重复添加
+            if (mGalleryItems.size()>0){
+                int lastOldItem=mGalleryItems.size()-1;
+                int lastNewItem=galleryItems.size()-1;
+                if (!galleryItems.get(lastNewItem).getId().equals(mGalleryItems.get(lastOldItem).getId())){
+                    mGalleryItems.addAll(galleryItems);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
             if (FlickrFetchr.page==1){

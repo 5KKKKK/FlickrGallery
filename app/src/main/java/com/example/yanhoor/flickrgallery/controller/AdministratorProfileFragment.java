@@ -1,5 +1,6 @@
 package com.example.yanhoor.flickrgallery.controller;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -58,6 +59,7 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
     private ArrayList<User> mFollowings;
     private ArrayList<Group>mGroups;
     private int count;//用于记录成功删除的照片数
+    private ProgressDialog progressDialog;
 
     ExpandableHeightGridView userPhotoGridView;
     TextView userName;
@@ -173,6 +175,10 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
                                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        progressDialog=new ProgressDialog(getActivity());
+                                        progressDialog.setMessage(getResources().getString(R.string.deleting_message));;
+                                        progressDialog.setCancelable(true);
+                                        progressDialog.show();
                                         for (String id:mSelectedPhotoIds){
                                             deletePhoto(mSelectedPhotoIds.size(),id);
                                         }
@@ -340,7 +346,6 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
     }
 
     private void deletePhoto(final int sum,String photoId){
-
         String[] mSignFullTokenStringArray = {"method" + "flickr.photos.delete",
                 "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
                 LogInFragment.PUBLIC_CODE, "photo_id" +photoId};
@@ -384,6 +389,7 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
                                 count++;
                                 if (count==sum){
                                     count=0;//清零用于继续删除
+                                    progressDialog.dismiss();
                                     Toast.makeText(getActivity(),R.string.delete_photo_successfully,Toast.LENGTH_SHORT).show();
                                 }
                             }

@@ -77,4 +77,8 @@
     <string name="save_photo_success">Saved the photo</string>
     <string name="view_original_photo">Original photo</string>
     <string name="check_photoset">Check photoset</string>
+    <string name="searching_message">Searching&#8230;</string>
+    <string name="deleting_message">Deleting&#8230;</string>
+    <string name="uploading_message">Uploading&#8230;</string>
+    <string name="replying_message">Replying&#8230;</string>
 </resources>

@@ -204,12 +204,15 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     }
 
     void updateUI(){
-        contact=mUser.getContact();
+        contact=mUser.getIsContact();
 
         //加载icon
         new KJBitmap.Builder().view(buddyIconImageView).imageUrl(mUser.getUserIconUrl()).display();
         if (mUser.getUserName()!=null){
             userName.setText(mUser.getUserName());
+            if (mUser.getIsContact().equals("1")){
+                userName.setTextColor(getResources().getColor(R.color.colorGreenDark));
+            }
         }
 
         if (mUser.getDescription()!=null){

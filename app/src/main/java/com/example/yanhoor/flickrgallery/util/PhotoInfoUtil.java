@@ -115,7 +115,7 @@ public class PhotoInfoUtil {
                             String iconFarm=parser.getAttributeValue(null,"iconfarm");
 
                             owner.setId(userId);
-                            owner.setLocation(location);
+                            owner.setLocation(location.trim());
                             owner.setUserName(userName);
                             owner.setRealName(realName);
                             owner.setIconFarm(iconFarm);

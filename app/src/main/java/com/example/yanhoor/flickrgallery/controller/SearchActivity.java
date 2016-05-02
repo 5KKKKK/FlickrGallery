@@ -1,6 +1,7 @@
 package com.example.yanhoor.flickrgallery.controller;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
     private CheckBox userNameCheckBox;
     private SearchView searchView;
     private String searchType;
+    private ProgressDialog progressDialog;
     private int checkCount=0;
 
     private String mFullToken;
@@ -84,10 +86,15 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
         }else if (checkCount>1){
             Toast.makeText(this,R.string.over_count_selected,Toast.LENGTH_SHORT).show();
         }else {
+            progressDialog=new ProgressDialog(this);
+            progressDialog.setMessage(getResources().getString(R.string.searching_message));
+            progressDialog.setCancelable(true);
+            progressDialog.show();
             if (searchType.equals("photo")){
                 Intent searchIntent=new Intent(this,SearchProcessActivity.class);
                 searchIntent.putExtra(SearchGalleryFragment.EXTRA_QUERY_GALLERY,query);
                 startActivity(searchIntent);
+                progressDialog.dismiss();
             }
             if (searchType.equals("group")){
                 searchGroup(query);
@@ -173,6 +180,7 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
             @Override
             public void onFinish() {
                 super.onFinish();
+                progressDialog.dismiss();
                 ListActivity.dataType="groups";
                 Intent i=new Intent(getBaseContext(),ListActivity.class);
                 i.putExtra(ListGroupsFragment.EXTRA_DATA_GROUPS,mGroups);
@@ -229,6 +237,7 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
             @Override
             public void onFinish() {
                 super.onFinish();
+                progressDialog.dismiss();
                 ListActivity.dataType="followings";
                 Intent i=new Intent(getBaseContext(),ListActivity.class);
                 i.putExtra(ListFollowingsFragment.EXTRA_DATA_FOLLOWINGS,mUsers);
@@ -286,6 +295,7 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
             @Override
             public void onFinish() {
                 super.onFinish();
+                progressDialog.dismiss();
                 ListActivity.dataType="followings";
                 Intent i=new Intent(getBaseContext(),ListActivity.class);
                 i.putExtra(ListFollowingsFragment.EXTRA_DATA_FOLLOWINGS,mUsers);
