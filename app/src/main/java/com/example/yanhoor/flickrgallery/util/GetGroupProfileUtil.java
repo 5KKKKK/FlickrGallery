@@ -227,6 +227,7 @@ public class GetGroupProfileUtil {
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("group_id", mGroup.getId())
                 .appendQueryParameter("extras","url_s")
+                .appendQueryParameter("per_page","6")
                 .build().toString();
 
         HttpConfig config=new HttpConfig();

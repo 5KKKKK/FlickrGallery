@@ -210,8 +210,10 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
         new KJBitmap.Builder().view(buddyIconImageView).imageUrl(mUser.getUserIconUrl()).display();
         if (mUser.getUserName()!=null){
             userName.setText(mUser.getUserName());
-            if (mUser.getIsContact().equals("1")){
-                userName.setTextColor(getResources().getColor(R.color.colorGreenDark));
+            if (mUser.getIsContact()!=null){
+                if (mUser.getIsContact().equals("1")){
+                    userName.setTextColor(getResources().getColor(R.color.colorGreenDark));
+                }
             }
         }
 

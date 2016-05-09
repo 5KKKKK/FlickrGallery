@@ -48,6 +48,8 @@ public class StaticMethodUtil {
     }
 
     public static void cleanImageView(ImageView imageView){
+        if(imageView==null) return;
+
         if (!(imageView.getDrawable() instanceof BitmapDrawable))
             return;
         BitmapDrawable drawable=(BitmapDrawable)imageView.getDrawable();

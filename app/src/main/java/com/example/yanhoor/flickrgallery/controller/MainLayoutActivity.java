@@ -75,6 +75,7 @@ public class MainLayoutActivity extends FragmentActivity {
             Toast.makeText(this,R.string.fullToken_unavailable,Toast.LENGTH_SHORT).show();
             Intent i=new Intent(this,LogInActivity.class);
             startActivity(i);
+            finish();
         }
 
         administrator=new User();

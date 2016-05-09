@@ -216,6 +216,7 @@ public class GetUserProfileUtil {
                 .appendQueryParameter("api_key",API_KEY)
                 .appendQueryParameter("user_id",mUser.getId())
                 .appendQueryParameter("extras","url_s")
+                .appendQueryParameter("per_page","6")
                 .build().toString();
 
         HttpConfig config=new HttpConfig();

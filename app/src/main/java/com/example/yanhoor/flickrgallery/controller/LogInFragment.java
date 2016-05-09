@@ -151,6 +151,8 @@ public class LogInFragment extends Fragment {
                 if (mFullToken!=null){
                     Toast.makeText(getActivity(),R.string.toast_verify_token_success,Toast.LENGTH_SHORT).show();
                     getActivity().finish();
+                    Intent i=new Intent(getActivity(),MainLayoutActivity.class);
+                    startActivity(i);
                 }else{
                     Toast.makeText(getActivity(),R.string.toast_verify_token_failed,Toast.LENGTH_SHORT).show();
                 }

@@ -45,9 +45,9 @@
         android:horizontalSpacing="5dp"
         android:verticalSpacing="5dp"
         android:stretchMode="columnWidth"
+        android:background="@drawable/upload_photo_grid_view_shape"
         android:columnWidth="90dp"
-        android:gravity="center"
-        android:background="@color/colorGrayLight"/>
+        android:gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"
