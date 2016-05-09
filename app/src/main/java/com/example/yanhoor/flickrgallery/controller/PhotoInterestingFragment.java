@@ -89,6 +89,8 @@ public class PhotoInterestingFragment extends VisibleFragment {
                     @Override
                     public void run() {
                         if (getActivity()!=null){
+                            FlickrFetchr.page=1;
+                            mGalleryItems.clear();
                             updateItems();
                             mSRL.setRefreshing(false);
                         }

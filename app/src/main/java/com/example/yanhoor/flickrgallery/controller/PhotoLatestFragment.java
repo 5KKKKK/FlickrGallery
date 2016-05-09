@@ -76,6 +76,8 @@ public class PhotoLatestFragment extends Fragment{
                     @Override
                     public void run() {
                         if (getActivity()!=null){
+                            page=1;
+                            mGalleryItems.clear();
                             getRecentPhoto();
                             mSRL.setRefreshing(false);
                         }

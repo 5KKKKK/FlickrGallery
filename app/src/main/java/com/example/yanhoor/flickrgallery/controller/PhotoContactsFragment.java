@@ -78,6 +78,8 @@ public class PhotoContactsFragment extends Fragment {
                     @Override
                     public void run() {
                         if (getActivity()!=null){
+                            page=1;
+                            mGalleryItems.clear();
                             getContactsPhotos();
                             mSRL.setRefreshing(false);
                         }
