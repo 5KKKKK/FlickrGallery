@@ -421,7 +421,7 @@ public class UploadPhotoFragment extends Fragment {
                             @Override
                             public void run() {
                                 if (getActivity()!=null){
-                                    Toast.makeText(getActivity(),"Error ocur when upload No"+(count+1)+"photo"+errorMessage,Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(),"Error occur when upload No"+(count+1)+"photo"+errorMessage,Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -438,4 +438,10 @@ public class UploadPhotoFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        UIHandler=null;
+        System.gc();
+    }
 }

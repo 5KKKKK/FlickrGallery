@@ -204,4 +204,11 @@ public class PhotoLatestFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGridView=null;
+        System.gc();
+    }
+
 }

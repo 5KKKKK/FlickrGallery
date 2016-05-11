@@ -371,4 +371,11 @@ public class GroupProfileFragment extends Fragment  implements View.OnClickListe
             return convertView;
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGroupPhotoGridview=null;
+        System.gc();
+    }
 }

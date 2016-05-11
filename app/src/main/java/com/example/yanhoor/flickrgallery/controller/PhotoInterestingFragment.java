@@ -226,6 +226,8 @@ public class PhotoInterestingFragment extends VisibleFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mGridView=null;
+        System.gc();
         mThumbnaiThread.quit();//结束线程
         Log.d(TAG,"Background thread destroyed");
     }

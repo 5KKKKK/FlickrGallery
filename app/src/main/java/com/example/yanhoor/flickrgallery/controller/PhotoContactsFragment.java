@@ -219,4 +219,10 @@ public class PhotoContactsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGridView=null;
+        System.gc();
+    }
 }

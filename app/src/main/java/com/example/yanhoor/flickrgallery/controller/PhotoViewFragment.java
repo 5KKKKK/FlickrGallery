@@ -165,4 +165,12 @@ public class PhotoViewFragment extends Fragment {
         super.onStop();
         //StaticMethodUtil.cleanImageView(mImageView);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mImageView=null;
+        mBitmap=null;
+        System.gc();
+    }
 }

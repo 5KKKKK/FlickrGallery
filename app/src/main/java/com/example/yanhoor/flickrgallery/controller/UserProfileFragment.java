@@ -276,4 +276,10 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        userPhotoGridView=null;
+        System.gc();
+    }
 }
