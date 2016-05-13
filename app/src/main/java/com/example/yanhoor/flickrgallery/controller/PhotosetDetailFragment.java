@@ -126,21 +126,31 @@ public class PhotosetDetailFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
             if (convertView==null){
+                viewHolder=new ViewHolder();
                 convertView=getActivity().getLayoutInflater().inflate(R.layout.item_image_view,parent,false);
+                viewHolder.mImageView=(ImageView)convertView.findViewById(R.id.gallery_item_imageView);
+                convertView.setTag(viewHolder);
+            }else {
+                viewHolder=(ViewHolder)convertView.getTag();
             }
-            ImageView imageView=(ImageView)convertView.findViewById(R.id.gallery_item_imageView);
-            imageView.setImageResource(R.drawable.brain_up_close);
+            viewHolder.mImageView.setImageResource(R.drawable.brain_up_close);
             GalleryItem item=getItem(position);
             Log.d(TAG, "getView: photo url is "+item.getUrl());
             Picasso.with(getActivity())
                     .load(item.getUrl())
                     .resize(240,240)
                     .centerCrop()
-                    .into(imageView);
+                    .into(viewHolder.mImageView);
 
             return convertView;
         }
+
+        private class ViewHolder{
+            ImageView mImageView;
+        }
+
     }
 
 }

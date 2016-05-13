@@ -128,7 +128,7 @@ public class MainLayoutActivity extends FragmentActivity {
                 .resize(100,100)
                 .centerCrop()
                 .into(administratorIcon);
-        if (administrator.getUserName()!=null){
+        if (!TextUtils.isEmpty(administrator.getUserName())){
             administratorName.setText(administrator.getUserName());
         }
 

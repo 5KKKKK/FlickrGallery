@@ -141,9 +141,11 @@ public class GroupProfileFragment extends Fragment  implements View.OnClickListe
     public void updateUI(){
         if (mGroup.getIsMember()!=null){
             if (mGroup.getIsMember().equals("1")){
+                mGroupName.setTextColor(getResources().getColor(R.color.colorGreenDark));
                 joinButton.setText(R.string.leave_group);
                 joinButton.setBackgroundResource(R.color.colorRedLight);
             }else {
+                mGroupName.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 joinButton.setText(R.string.join_group);
                 joinButton.setBackgroundResource(R.color.colorGreenDark);
             }

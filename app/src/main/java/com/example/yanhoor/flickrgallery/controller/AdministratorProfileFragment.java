@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -275,16 +276,16 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
     void updateUI(){
         //加载icon
         new KJBitmap.Builder().view(buddyIconImageView).imageUrl(mUser.getUserIconUrl()).display();
-        if (mUser.getUserName()!=null){
+        if (!TextUtils.isEmpty(mUser.getUserName())){
             userName.setText(mUser.getUserName());
         }
 
-        if (mUser.getDescription()!=null){
+        if (!TextUtils.isEmpty(mUser.getDescription())){
             descriptionLayout.setVisibility(View.VISIBLE);
             userDescription.setText(mUser.getDescription());
         }
 
-        if (mUser.getFollowingsNumber()!=null){
+        if (!TextUtils.isEmpty(mUser.getFollowingsNumber())){
             followingNumber.setText(mUser.getFollowingsNumber());
         }
 
@@ -292,17 +293,17 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
             groupNumber.setText(String.valueOf(mUser.getGroups().size()));
         }
 
-        if (mUser.getPhotosetNum()!=null){
+        if (!TextUtils.isEmpty(mUser.getPhotosetNum())){
             photosetNumber.setText(mUser.getPhotosetNum());
         }
 
-        if (mUser.getFavoritesNum()!=null){
+        if (!TextUtils.isEmpty(mUser.getFavoritesNum())){
             favoritesLayout.setVisibility(View.VISIBLE);
             favoritesNum.setText(mUser.getFavoritesNum());
         }
 
         //Log.d(TAG,"location length is "+mUser.getLocation().length());
-        if (mUser.getLocation()!=null&&mUser.getLocation().length()!=0){
+        if (!TextUtils.isEmpty(mUser.getLocation())&&mUser.getLocation().length()!=0){
             locationLayout.setVisibility(View.VISIBLE);
             locationTextView.setText(mUser.getLocation());
         }

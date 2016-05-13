@@ -22,6 +22,7 @@
         android:lines="2"
         android:maxLines="2"
         android:layout_marginTop="12dp"
+        android:shadowColor="@color/colorGreenLight"
         android:hint="@string/title_new_photo_hint"/>
 
     <EditText
