@@ -43,8 +43,8 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
     private SearchView searchView;
     private String searchType;
     private ProgressDialog progressDialog;
-    private int checkCount=0;
 
+    private int checkCount=0;
     private String mFullToken;
     private ArrayList<Group>mGroups;
     private ArrayList<User>mUsers;

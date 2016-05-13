@@ -23,8 +23,8 @@ public class ThumbnaiDownloader<Token> extends HandlerThread {
     private static final String TAG="ThumbnaiDownloader";
     private static final int MESSAGE_DOWNLOAD=0;
 
-    Handler mHandler;
-    Context mContext;
+    private Handler mHandler;
+    private Context mContext;
 
     //创建键为Token类型，值为string类型的同步hashMap
     //Collections.synchronizedMap允许需要同步的用户可以拥有同步，而不需要同步的用户则不必为同步付出代价。

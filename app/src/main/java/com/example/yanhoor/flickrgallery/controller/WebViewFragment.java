@@ -20,6 +20,7 @@ import com.example.yanhoor.flickrgallery.R;
  */
 public class WebViewFragment extends Fragment {
     private static final String TAG="WebViewFragment";
+
     private WebView mWebView;
 
     public static final String EXTRA_URL="url";

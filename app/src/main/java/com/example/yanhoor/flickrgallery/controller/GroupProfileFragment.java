@@ -67,7 +67,7 @@ public class GroupProfileFragment extends Fragment  implements View.OnClickListe
     private ExpandableTextView mGroupDescription;
     private ExpandableHeightGridView mGroupPhotoGridview;
 
-    String mGroupId;
+    private String mGroupId;
 
     public static GroupProfileFragment newInstance(String mGroupId){
         Bundle args=new Bundle();

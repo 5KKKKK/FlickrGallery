@@ -37,6 +37,8 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     private String mUserId;
     private ArrayList<User>mFollowings;
     private ArrayList<Group>mGroups;
+    private String contact;
+
     ExpandableHeightGridView userPhotoGridView;
     TextView userName;
     TextView personalPage;
@@ -55,8 +57,6 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     TextView location;
     ImageView buddyIconImageView;
     GetUserProfileUtil mGetUserProfileUtil;
-
-    String contact;
 
     public static final String EXTRA_USER_ID="com.example.yanhoor.flickrgallery.controller.UserProfileFragment.user_Id";
 

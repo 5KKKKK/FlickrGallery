@@ -35,8 +35,9 @@ public class PhotoInterestingFragment extends VisibleFragment {
     GalleryItemAdapter mAdapter;
     GridView mGridView;
     ProgressBar mProgressBar;
-    ArrayList<GalleryItem> mGalleryItems;
-    ThumbnaiDownloader<ImageView> mThumbnaiThread;
+
+    private ArrayList<GalleryItem> mGalleryItems;
+    private ThumbnaiDownloader<ImageView> mThumbnaiThread;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class PhotoInterestingFragment extends VisibleFragment {
         if (mGalleryItems ==null){
             updateItems();
         }
-        mThumbnaiThread=new ThumbnaiDownloader<>(getActivity(),new Handler());//创建的handler默认与当前线程相关联
+        mThumbnaiThread=new ThumbnaiDownloader<>(getActivity().getApplicationContext(),new Handler());//创建的handler默认与当前线程相关联
         mThumbnaiThread.setListener( new ThumbnaiDownloader.Listener<ImageView>(){
             @Override
             public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {

@@ -81,10 +81,10 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
     Button sendComment;
     RecyclerView mRV;
 
-    PhotoInfoUtil mPhotoInfoUtil;
-    ArrayList<Comment>mComments;
-    User mOwner;
-    String mGalleryId;
+    private PhotoInfoUtil mPhotoInfoUtil;
+    private ArrayList<Comment>mComments;
+    private User mOwner;
+    private String mGalleryId;
 
     public static PhotoDetailFragment newPhotoDetailFragmentInstance(String mId){
         Bundle args=new Bundle();
