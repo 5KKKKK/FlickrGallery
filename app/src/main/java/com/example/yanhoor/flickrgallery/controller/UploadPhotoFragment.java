@@ -27,8 +27,10 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.example.yanhoor.flickrgallery.MyApplication;
 import com.example.yanhoor.flickrgallery.R;
 import com.example.yanhoor.flickrgallery.util.StaticMethodUtil;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.kymjs.kjframe.http.HttpParams;
 import org.xmlpull.v1.XmlPullParser;
@@ -56,6 +58,8 @@ public class UploadPhotoFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_PICTURE=1;
     private static final String BOUNDARYSTR="---------------------------7d44e178b0434";
     private static final String BOUNDARY="--" + BOUNDARYSTR + "\r\n";
+    private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
     private EditText editTitle;
     private EditText editDescription;
@@ -269,9 +273,9 @@ public class UploadPhotoFragment extends Fragment {
         title=editTitle.getText().toString().trim();
         description=editDescription.getText().toString().trim();
 
-        String[] mSignFullTokenStringArray = {"api_key" + LogInFragment.API_KEY,
+        String[] mSignFullTokenStringArray = {"api_key" +API_KEY,
                 "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "title"+title, "description"+description};
+                PUBLIC_CODE, "title"+title, "description"+description};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {
@@ -283,7 +287,7 @@ public class UploadPhotoFragment extends Fragment {
         params.put("photo",photoBinary);
 
         String url = Uri.parse("https://up.flickr.com/services/upload/").buildUpon()
-                .appendQueryParameter("api_key", LogInFragment.API_KEY)
+                .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("auth_token", MainLayoutActivity.fullToken)
                 .appendQueryParameter("title",title)
                 .appendQueryParameter("description",description)
@@ -310,7 +314,7 @@ public class UploadPhotoFragment extends Fragment {
             sb.append(BOUNDARY);
             sb.append("Content-Disposition: form-data; name=\"api_key\"");
             sb.append("\r\n\r\n");
-            sb.append(LogInFragment.API_KEY);
+            sb.append(API_KEY);
             out.write(sb.toString().getBytes());
 
             StringBuilder tokenBuilder=new StringBuilder();
@@ -441,6 +445,8 @@ public class UploadPhotoFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity().getApplication());
+        refWatcher.watch(this);
         UIHandler=null;
         System.gc();
     }

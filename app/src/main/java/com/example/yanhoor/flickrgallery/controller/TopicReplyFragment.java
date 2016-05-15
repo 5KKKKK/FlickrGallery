@@ -35,6 +35,7 @@ public class TopicReplyFragment extends Fragment {
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
     public static final String EXTRA_GROUP_ID="group_id";
     public static final String EXTRA_TOPIC_ID="topic_id";
 
@@ -92,8 +93,8 @@ public class TopicReplyFragment extends Fragment {
 
     private void postReply(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.groups.discuss.replies.add",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "group_id" + mTopic.getGroupId(),
+                "api_key" +API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "group_id" + mTopic.getGroupId(),
                 "topic_id"+mTopic.getId(),"message"+replyContent};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();

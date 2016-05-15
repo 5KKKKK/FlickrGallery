@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -56,6 +55,7 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
     private static final String TAG="PhotoDetailFragment";
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
     private String mFullToken;
 
@@ -114,16 +114,6 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
 
         //获取评论
         mComments=new ArrayList<>();
-
-        //判断是否登录
-        mFullToken= PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getString(LogInFragment.PREF_FULL_TOKEN,null);
-        String administratorId=PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getString(LogInFragment.PREF_USER_ID,null);
-        if (administratorId==null){
-            Toast.makeText(getActivity(), R.string.fullToken_unavailable,Toast.LENGTH_LONG).show();
-            getActivity().finish();
-        }
 
         mGalleryItem= new GalleryItem();
         mGalleryItem.setId(mGalleryId);
@@ -362,8 +352,8 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
 
     public void postComment(String commentText){
         String[] mSignFullTokenStringArray = {"method" + "flickr.photos.comments.addComment",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + mFullToken,
-                LogInFragment.PUBLIC_CODE, "photo_id" + mGalleryItem.getId(),
+                "api_key" +API_KEY, "auth_token" + mFullToken,
+                PUBLIC_CODE, "photo_id" + mGalleryItem.getId(),
                 "comment_text"+commentText};
 
         Arrays.sort(mSignFullTokenStringArray);
@@ -424,8 +414,8 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
 
     private void addAsFavorite(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.favorites.add",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + mFullToken,
-                LogInFragment.PUBLIC_CODE, "photo_id" + mGalleryItem.getId()};
+                "api_key" + API_KEY, "auth_token" + mFullToken,
+                PUBLIC_CODE, "photo_id" + mGalleryItem.getId()};
 
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
@@ -484,8 +474,8 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
 
     private void removeFavorite(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.favorites.remove",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + mFullToken,
-                LogInFragment.PUBLIC_CODE, "photo_id" + mGalleryItem.getId()};
+                "api_key" + API_KEY, "auth_token" + mFullToken,
+                PUBLIC_CODE, "photo_id" + mGalleryItem.getId()};
 
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
@@ -544,10 +534,8 @@ public class PhotoDetailFragment extends Fragment  implements View.OnClickListen
     private class RVAdapter extends RecyclerView.Adapter<RVAdapter.RVViewHolder>{
         @Override
         public RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RVViewHolder holder=new RVViewHolder(LayoutInflater.from(getActivity())
+            return new RVViewHolder(LayoutInflater.from(getActivity())
                     .inflate(R.layout.item_comment,parent,false));
-
-            return holder;
         }
 
         @Override

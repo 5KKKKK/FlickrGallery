@@ -5,13 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.yanhoor.flickrgallery.MyApplication;
 import com.example.yanhoor.flickrgallery.R;
 import com.example.yanhoor.flickrgallery.model.Group;
 import com.example.yanhoor.flickrgallery.model.User;
@@ -35,6 +35,7 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
     private static final String TAG="SearchActivity";
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
     private CheckBox photoCheckBox;
     private CheckBox groupCheckBox;
@@ -53,8 +54,8 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        mFullToken= PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(LogInFragment.PREF_FULL_TOKEN,null);
+        MyApplication myApplication=(MyApplication)getApplication();
+        mFullToken=myApplication.getFullToken();
 
         searchView=(SearchView)findViewById(R.id.search_view);
         photoCheckBox=(CheckBox)findViewById(R.id.search_photo_checkBox);
@@ -156,8 +157,8 @@ public class SearchActivity extends Activity implements CompoundButton.OnChecked
         mGroups=new ArrayList<>();
 
         String[] mSignFullTokenStringArray = {"method" + "flickr.groups.search",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + mFullToken,
-                LogInFragment.PUBLIC_CODE, "text"+query};
+                "api_key" +API_KEY, "auth_token" + mFullToken,
+                PUBLIC_CODE, "text"+query};
 
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();

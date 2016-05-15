@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -27,12 +26,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yanhoor.flickrgallery.MyApplication;
 import com.example.yanhoor.flickrgallery.R;
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.Group;
 import com.example.yanhoor.flickrgallery.model.User;
 import com.example.yanhoor.flickrgallery.util.GetUserProfileUtil;
 import com.example.yanhoor.flickrgallery.util.StaticMethodUtil;
+import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.Picasso;
 
 import org.kymjs.kjframe.KJBitmap;
@@ -54,12 +55,14 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
     private static final String TAG="AdministratorProfile";
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
+    private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
     private User mUser;
     private String mId;
     private ArrayList<User> mFollowings;
     private ArrayList<Group>mGroups;
-    private int count;//用于记录成功删除的照片数
+    private int deletedPhotoCount;//用于记录成功删除的照片数
     private ProgressDialog progressDialog;
 
     ExpandableHeightGridView userPhotoGridView;
@@ -83,8 +86,8 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        mId= PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .getString(LogInFragment.PREF_USER_ID,null);
+        MyApplication myApplication=(MyApplication)getActivity().getApplication();
+        mId=myApplication.getId();
         Log.d(TAG,"mId is "+mId);
         if (mId==null){
             Toast.makeText(getActivity(), R.string.fullToken_unavailable,Toast.LENGTH_SHORT).show();
@@ -330,26 +333,35 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Log.d(TAG,"arrayAdapter, getView");
+            ViewHolder viewHolder;
             if (convertView==null){
+                viewHolder=new ViewHolder();
                 convertView=getActivity().getLayoutInflater().inflate(R.layout.item_image_view,parent,false);
+                viewHolder.mImageView=(ImageView)convertView.findViewById(R.id.gallery_item_imageView);
+                convertView.setTag(viewHolder);
+            }else {
+                viewHolder=(ViewHolder)convertView.getTag();
             }
-            final ImageView imageView=(ImageView)convertView.findViewById(R.id.gallery_item_imageView);
-            imageView.setImageResource(R.drawable.brain_up_close);
+            viewHolder.mImageView.setImageResource(R.drawable.brain_up_close);
 
             Picasso.with(getActivity())
                     .load(mUser.getGalleryItems().get(position).getUrl())
                     .resize(240,240)
                     .centerCrop()
-                    .into(imageView);
+                    .into(viewHolder.mImageView);
 
             return convertView;
+        }
+
+        private class ViewHolder{
+            ImageView mImageView;
         }
     }
 
     private void deletePhoto(final int sum,String photoId){
         String[] mSignFullTokenStringArray = {"method" + "flickr.photos.delete",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "photo_id" +photoId};
+                "api_key" + API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "photo_id" +photoId};
 
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
@@ -359,7 +371,7 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
         String apiSig = StaticMethodUtil.countMD5OfString(mSB.toString());
         String url = Uri.parse(ENDPOINT).buildUpon()
                 .appendQueryParameter("method", "flickr.photos.delete")
-                .appendQueryParameter("api_key", LogInFragment.API_KEY)
+                .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("photo_id", photoId)
                 .appendQueryParameter("auth_token", MainLayoutActivity.fullToken)
                 .appendQueryParameter("api_sig", apiSig)
@@ -387,9 +399,9 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
                         if (eventType==XmlPullParser.START_TAG&&"rsp".equals(parser.getName())){
                             String state=parser.getAttributeValue(null,"stat");
                             if (state.equals("ok")){
-                                count++;
-                                if (count==sum){
-                                    count=0;//清零用于继续删除
+                                deletedPhotoCount++;
+                                if (deletedPhotoCount ==sum){
+                                    deletedPhotoCount =0;//清零用于继续删除
                                     progressDialog.dismiss();
                                     Toast.makeText(getActivity(),R.string.delete_photo_successfully,Toast.LENGTH_SHORT).show();
                                 }
@@ -398,7 +410,7 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
 
                         if (eventType==XmlPullParser.START_TAG&&"err".equals(parser.getName())){
                             String errorMessage=parser.getAttributeValue(null,"msg");
-                            Toast.makeText(getActivity(),"Error occur uploading No"+(count+1)+"photo"+errorMessage,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"Error occur uploading No"+(deletedPhotoCount +1)+"photo"+errorMessage,Toast.LENGTH_SHORT).show();
                         }
                         eventType=parser.next();
                     }
@@ -410,6 +422,13 @@ public class AdministratorProfileFragment extends Fragment implements View.OnCli
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity().getApplication());
+        refWatcher.watch(this);
     }
 
 }

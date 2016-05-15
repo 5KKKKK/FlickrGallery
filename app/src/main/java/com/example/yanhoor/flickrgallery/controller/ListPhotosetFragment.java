@@ -82,12 +82,16 @@ public class ListPhotosetFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
             if (convertView==null){
+                viewHolder=new ViewHolder();
                 convertView=getActivity().getLayoutInflater().inflate(R.layout.item_photoset_list,parent,false);
+                viewHolder.primaryPhoto=(ImageView)convertView.findViewById(R.id.imageView_photoset_primary);
+                viewHolder.titleView=(TextView)convertView.findViewById(R.id.photoset_title);
+                convertView.setTag(viewHolder);
+            }else {
+                viewHolder=(ViewHolder)convertView.getTag();
             }
-            ImageView primaryPhoto=(ImageView)convertView.findViewById(R.id.imageView_photoset_primary);
-            TextView titleView=(TextView)convertView.findViewById(R.id.photoset_title);
-
             PhotoSet photoSet=mPhotoSets.get(position);
 
             Picasso.with(getActivity())
@@ -95,11 +99,16 @@ public class ListPhotosetFragment extends Fragment {
                     .resize(240,240)
                     .centerCrop()
                     .placeholder(R.drawable.brain_up_close)
-                    .into(primaryPhoto);
+                    .into(viewHolder.primaryPhoto);
 
-            titleView.setText(photoSet.getTitle());
+            viewHolder.titleView.setText(photoSet.getTitle());
 
             return convertView;
+        }
+
+        private class ViewHolder{
+            ImageView primaryPhoto;
+            TextView titleView;
         }
 
     }

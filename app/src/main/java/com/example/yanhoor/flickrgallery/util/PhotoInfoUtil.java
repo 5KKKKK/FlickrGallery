@@ -3,7 +3,6 @@ package com.example.yanhoor.flickrgallery.util;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.yanhoor.flickrgallery.controller.LogInFragment;
 import com.example.yanhoor.flickrgallery.controller.MainLayoutActivity;
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.User;
@@ -30,6 +29,7 @@ public class PhotoInfoUtil {
 
     public  static final String ENDPOINT="https://api.flickr.com/services/rest/";
     public static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
 
     listener mMainThreadListener;
@@ -47,8 +47,8 @@ public class PhotoInfoUtil {
         String photo_id=galleryItem.getId();
 
         String[] mSignFullTokenStringArray = {"method" + "flickr.photos.getInfo",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "photo_id" + photo_id,"format"+"rest"};
+                "api_key" +API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "photo_id" + photo_id,"format"+"rest"};
 
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();

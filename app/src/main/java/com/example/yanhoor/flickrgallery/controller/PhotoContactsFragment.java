@@ -41,6 +41,7 @@ public class PhotoContactsFragment extends Fragment {
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
     private static final String PARAM_EXTRAS="extras";
     private static final String EXTRA_SMALL_URL="url_s";
 
@@ -132,9 +133,9 @@ public class PhotoContactsFragment extends Fragment {
 
     private void getContactsPhotos(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.photos.getContactsPhotos",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                "api_key" +API_KEY, "auth_token" + MainLayoutActivity.fullToken,
                 "page"+page,"per_page"+per_page,
-                LogInFragment.PUBLIC_CODE,PARAM_EXTRAS+EXTRA_SMALL_URL};
+                PUBLIC_CODE,PARAM_EXTRAS+EXTRA_SMALL_URL};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {

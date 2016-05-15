@@ -3,7 +3,6 @@ package com.example.yanhoor.flickrgallery.util;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.yanhoor.flickrgallery.controller.LogInFragment;
 import com.example.yanhoor.flickrgallery.controller.MainLayoutActivity;
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.Group;
@@ -33,6 +32,7 @@ public class GetGroupProfileUtil {
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
     private GroupListener mMainThreadListener;
     private Group mGroup;
@@ -59,8 +59,8 @@ public class GetGroupProfileUtil {
     public void getGroupInfo(){
 
         String[] mSignFullTokenStringArray = {"method" + "flickr.groups.getInfo",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "group_id" + mGroup.getId()};
+                "api_key" + API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "group_id" + mGroup.getId()};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {
@@ -277,8 +277,8 @@ public class GetGroupProfileUtil {
 
     public void getGroupMembers(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.groups.members.getList",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "group_id" + mGroup.getId()};
+                "api_key" +API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "group_id" + mGroup.getId()};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {

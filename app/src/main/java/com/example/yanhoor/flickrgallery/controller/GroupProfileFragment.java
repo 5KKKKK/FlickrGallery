@@ -48,6 +48,7 @@ public class GroupProfileFragment extends Fragment  implements View.OnClickListe
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
 
     public static String EXTRA_GROUP_ID="groupId";
 
@@ -234,8 +235,8 @@ public class GroupProfileFragment extends Fragment  implements View.OnClickListe
 
     private void leaveGroup(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.groups.leave",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "group_id" + mGroup.getId()};
+                "api_key" +API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "group_id" + mGroup.getId()};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {
@@ -291,8 +292,8 @@ public class GroupProfileFragment extends Fragment  implements View.OnClickListe
 
     private void joinGroup(){
         String[] mSignFullTokenStringArray = {"method" + "flickr.groups.join",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "group_id" + mGroup.getId()};
+                "api_key" + API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "group_id" + mGroup.getId()};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {

@@ -2,10 +2,9 @@ package com.example.yanhoor.flickrgallery.util;
 
 import android.content.Context;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.example.yanhoor.flickrgallery.controller.LogInFragment;
+import com.example.yanhoor.flickrgallery.MyApplication;
 import com.example.yanhoor.flickrgallery.controller.MainLayoutActivity;
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.Group;
@@ -33,6 +32,8 @@ public class GetUserProfileUtil {
 
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
+    private static final String PREF_FULL_TOKEN="fullToken";
 
     private User mUser;
     private ArrayList<GalleryItem>mGalleryItems;
@@ -40,7 +41,7 @@ public class GetUserProfileUtil {
     private ArrayList<Group>mGroups;
     private ArrayList<PhotoSet>mPhotoSets;
 
-    listener mPersonalProfileListener;
+    private listener mPersonalProfileListener;
 
     public interface listener {
         void onUpdateFinish(User user);
@@ -69,8 +70,8 @@ public class GetUserProfileUtil {
 
         Log.d(TAG,"fulltoken is "+MainLayoutActivity.fullToken);
         String[] mSignFullTokenStringArray = {"method" + "flickr.people.getInfo",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "user_id" + mUser.getId()};
+                "api_key" + API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "user_id" + mUser.getId()};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {
@@ -266,13 +267,13 @@ public class GetUserProfileUtil {
     public void getGroups(Context context){
         mGroups=new ArrayList<>();
 
-        String mFullToken= PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(LogInFragment.PREF_FULL_TOKEN,null);
+        MyApplication myApplication=(MyApplication)context.getApplicationContext();
+        String mFullToken=myApplication.getFullToken();
 
         //为flickr.stats.getPhotoStats方法获取api_sig
         String[] mSignFullTokenStringArray = {"method" + "flickr.people.getGroups","user_id"+mUser.getId(),
-                "api_key" + LogInFragment.API_KEY, "auth_token" + mFullToken,
-                LogInFragment.PUBLIC_CODE};
+                "api_key" + API_KEY, "auth_token" + mFullToken,
+                PUBLIC_CODE};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
         for (String s : mSignFullTokenStringArray) {
@@ -344,8 +345,8 @@ public class GetUserProfileUtil {
         mPhotoSets=new ArrayList<>();
 
         String[] mSignFullTokenStringArray = {"method" + "flickr.photosets.getList",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "user_id" + mUser.getId(),
+                "api_key" + API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "user_id" + mUser.getId(),
         "primary_photo_extras"+"url_s"};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();
@@ -438,8 +439,8 @@ public class GetUserProfileUtil {
         mFavoritePhotos=new ArrayList<>();
 
         String[] mSignFullTokenStringArray = {"method" + "flickr.favorites.getList",
-                "api_key" + LogInFragment.API_KEY, "auth_token" + MainLayoutActivity.fullToken,
-                LogInFragment.PUBLIC_CODE, "user_id" + mUser.getId(),"format"+"rest",
+                "api_key" + API_KEY, "auth_token" + MainLayoutActivity.fullToken,
+                PUBLIC_CODE, "user_id" + mUser.getId(),"format"+"rest",
                 "extras"+"url_s"};
         Arrays.sort(mSignFullTokenStringArray);
         StringBuilder mSB = new StringBuilder();

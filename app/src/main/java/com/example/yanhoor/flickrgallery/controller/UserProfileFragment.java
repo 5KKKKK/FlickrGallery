@@ -15,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.yanhoor.flickrgallery.MyApplication;
 import com.example.yanhoor.flickrgallery.R;
 import com.example.yanhoor.flickrgallery.model.GalleryItem;
 import com.example.yanhoor.flickrgallery.model.Group;
 import com.example.yanhoor.flickrgallery.model.User;
 import com.example.yanhoor.flickrgallery.util.GetUserProfileUtil;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
+import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.Picasso;
 
 import org.kymjs.kjframe.KJBitmap;
@@ -279,6 +281,8 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
+        RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity().getApplication());
+        refWatcher.watch(this);
         userPhotoGridView=null;
         System.gc();
     }

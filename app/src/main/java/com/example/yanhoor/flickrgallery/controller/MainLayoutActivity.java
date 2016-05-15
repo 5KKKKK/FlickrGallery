@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.yanhoor.flickrgallery.MyApplication;
 import com.example.yanhoor.flickrgallery.R;
 import com.example.yanhoor.flickrgallery.model.User;
 import com.example.yanhoor.flickrgallery.util.GetUserProfileUtil;
@@ -66,10 +66,9 @@ public class MainLayoutActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_layout);
 
-        fullToken=PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(LogInFragment.PREF_FULL_TOKEN,null);
-        administratorId=PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(LogInFragment.PREF_USER_ID,null);
+        MyApplication myApplication=(MyApplication)getApplication();
+        fullToken=myApplication.getFullToken();
+        administratorId=myApplication.getId();
 
         if (TextUtils.isEmpty(fullToken)){
             Toast.makeText(this,R.string.fullToken_unavailable,Toast.LENGTH_SHORT).show();
@@ -234,6 +233,12 @@ public class MainLayoutActivity extends FragmentActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 
 }

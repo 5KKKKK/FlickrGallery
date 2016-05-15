@@ -38,10 +38,9 @@ public class LogInFragment extends Fragment {
     public static final String PREF_FULL_TOKEN="fullToken";
     public static final String PREF_USER_ID ="id";
     public static final String PREF_USER_NAME="username";
-    public static final String PREF_FULL_NAME="fullName";
 
-    public static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
-    public static final String PUBLIC_CODE="a0e8c8d18675b5e2";
+    private static final String API_KEY="0964378968b9ce3044e29838e2fc0cd8";
+    private static final String PUBLIC_CODE="a0e8c8d18675b5e2";
     private static final String ENDPOINT="https://api.flickr.com/services/rest/";
     private static final String METHOD_GET_FULL_TOKEN="flickr.auth.getFullToken";
     private String mMiniToken;
@@ -174,15 +173,16 @@ public class LogInFragment extends Fragment {
                         if (eventType==XmlPullParser.START_TAG&&"user".equals(parser.getName())){
                             String id=parser.getAttributeValue(null,"nsid");
                             String userName=parser.getAttributeValue(null,"username");
-                            String fullName=parser.getAttributeValue(null,"fullname");
 
-                            PreferenceManager.getDefaultSharedPreferences(getActivity())
-                                    .edit()
-                                    .putString(PREF_FULL_TOKEN,mFullToken)
-                                    .putString(PREF_USER_ID,id)
-                                    .putString(PREF_USER_NAME,userName)
-                                    .putString(PREF_FULL_NAME,fullName)
-                                    .commit();
+                            if (getActivity()!=null){
+                                PreferenceManager.getDefaultSharedPreferences(getActivity())
+                                        .edit()
+                                        .putString(PREF_FULL_TOKEN,mFullToken)
+                                        .putString(PREF_USER_NAME,userName)
+                                        .putString(PREF_USER_ID,id)
+                                        .commit();
+                            }
+
                         }
                         eventType=parser.next();
                     }
