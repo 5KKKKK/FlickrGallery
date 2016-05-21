@@ -39,7 +39,6 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     private String mUserId;
     private ArrayList<User>mFollowings;
     private ArrayList<Group>mGroups;
-    private String contact;
 
     ExpandableHeightGridView userPhotoGridView;
     TextView userName;
@@ -141,8 +140,6 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
 
                 GalleryItem item=mUser.getGalleryItems().get(position);
                 Intent i=new Intent(getActivity(),PhotoDetailActivity.class);
-                //用于代替PhotoDetailActivity实现滑动查看图片详情
-                //Intent i=new Intent(getActivity(),PhotoPageActivity.class);
                 i.putExtra(PhotoDetailFragment.EXTRA_GALLERYITEM_mId,item.getId());
                 startActivity(i);
             }
@@ -206,25 +203,23 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
     }
 
     void updateUI(){
-        contact=mUser.getIsContact();
 
         //加载icon
         new KJBitmap.Builder().view(buddyIconImageView).imageUrl(mUser.getUserIconUrl()).display();
         if (mUser.getUserName()!=null){
             userName.setText(mUser.getUserName());
-            if (mUser.getIsContact()!=null){
-                if (mUser.getIsContact().equals("1")){
-                    userName.setTextColor(getResources().getColor(R.color.colorGreenDark));
-                }
-            }
         }
 
-        if (mUser.getDescription()!=null){
+        if (!TextUtils.isEmpty(mUser.getIsContact())&&mUser.getIsContact().equals("1")){
+            userName.setTextColor(getResources().getColor(R.color.colorGreenDark));
+        }
+
+        if (!TextUtils.isEmpty(mUser.getDescription())){
             descriptionLayout.setVisibility(View.VISIBLE);
             userDescription.setText(mUser.getDescription());
         }
 
-        if (mUser.getFollowingsNumber()!=null){
+        if (!TextUtils.isEmpty(mUser.getFollowingsNumber())){
             followingNumber.setText(mUser.getFollowingsNumber());
         }
 
@@ -232,11 +227,11 @@ public class UserProfileFragment extends Fragment  implements View.OnClickListen
             groupNumber.setText(String.valueOf(mUser.getGroups().size()));
         }
 
-        if (mUser.getPhotosetNum()!=null){
+        if (!TextUtils.isEmpty(mUser.getPhotosetNum())){
             photosetNumber.setText(mUser.getPhotosetNum());
         }
 
-        if (mUser.getFavoritesNum()!=null){
+        if (!TextUtils.isEmpty(mUser.getFavoritesNum())){
             favoritesLayout.setVisibility(View.VISIBLE);
             favoritesNum.setText(mUser.getFavoritesNum());
         }
