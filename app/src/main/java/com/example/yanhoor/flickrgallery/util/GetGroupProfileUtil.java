@@ -159,7 +159,7 @@ public class GetGroupProfileUtil {
 
             @Override
             public void onSuccess(String t) {
-                mTopics=new ArrayList<>();
+                mTopics = new ArrayList<>();
                 super.onSuccess(t);
                 Log.d(TAG,"Getting topics from "+t);
 
